@@ -6,9 +6,9 @@ const modules = require('./modules');
 const cluster = require('cluster');
 const cpus = require('os').cpus().length;
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 
-if (cluster.isMaster && process.env.NODE_ENV === 'production') {
+if (cluster.isMaster) {
   for (let i = 0; i < cpus; i++) {
     cluster.fork();
   }

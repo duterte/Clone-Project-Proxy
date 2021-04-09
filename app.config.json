@@ -1,0 +1,9 @@
+{
+  "tmpDirPath": "tmp",
+  "atlassian": {
+    "vendorId": 27437,
+    "remoteDNS": null,
+    "url1": "/rest/2/vendors/:vendorId/reporting/licenses",
+    "url2": "/rest/2/vendors/:vendorId/reporting/sales/transactions"
+  }
+}

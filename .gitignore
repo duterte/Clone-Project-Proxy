@@ -2,9 +2,15 @@
 # directory
 
 /node_modules/
+/pipes/
+/tmp/
+/temp/
+*test
 
 # files
 .env
 *.txt
 *.debug
 *.log
+*.http
+*.rest
