@@ -7,9 +7,9 @@
   1. - [x] Add param "withDataInsights=true" to parameters list (or replace it if already exists)
   2. - [x] If param "tier" or "withAttribution" specified, stop work and return an error
 
-- [ ] Execute request with these params to URL1. Result can include several returned licenses, all of them should be treated as described below. In case of more than 100 licenses found, stop work and return an error.
+- [x] Execute request with these params to URL1. Result can include several returned licenses, all of them should be treated as described below. In case of more than 100 licenses found, stop work and return an error.
 
-- [ ] Get value of "tier" field and determine license size.
+- [x] Get value of "tier" field and determine license size.
 
   1. - [ ] It can include size already. Format "<Number> Users" (i.e. 100 Users or 2000 Users). Or sometimes "Unlimited Users". In this case additional lookup with URL2 is not needed. The number will be processed later.
   2. - [ ] "Evaluation" or "Demonstration License". Should check field "evaluationOpportunitySize". If this field contains decimal number (alternatively it can be empty or "NA" or "Unknown" or something else), use it. If there is no number, left tier untouched. No additional lookup needed.
@@ -21,11 +21,11 @@
 
 - [ ] If on the previous step a number (license size) were obtained, it should be converted to one of buckets:
 
-  1. - [ ] 1-10: S
-  2. - [ ] 11-50: M
-  3. - [ ] 51-250: L
-  4. - [ ] 251-1250: XL
-  5. - [ ] 1251-6250: 2XL
-  6. - [ ] 6251+ or Unlimited: 3XL
+  1. - [x] 1-10: S
+  2. - [x] 11-50: M
+  3. - [x] 51-250: L
+  4. - [x] 251-1250: XL
+  5. - [x] 1251-6250: 2XL
+  6. - [x] 6251+ or Unlimited: 3XL
 
 - [ ] The resulted value should replace the original tier and returned as response.
