@@ -4,15 +4,15 @@
 
 - [ ] Get all params from incoming requests.
 
-  1. Add param "withDataInsights=true" to parameters list (or replace it if already exists)
-  2. If param "tier" or "withAttribution" specified, stop work and return an error
+  1. - [ ] Add param "withDataInsights=true" to parameters list (or replace it if already exists)
+  2. - [ ] If param "tier" or "withAttribution" specified, stop work and return an error
 
 - [ ] Execute request with these params to URL1. Result can include several returned licenses, all of them should be treated as described below. In case of more than 100 licenses found, stop work and return an error.
 
 - [ ] Get value of "tier" field and determine license size.
 
-  1. It can include size already. Format "<Number> Users" (i.e. 100 Users or 2000 Users). Or sometimes "Unlimited Users". In this case additional lookup with URL2 is not needed. The number will be processed later.
-  2. "Evaluation" or "Demonstration License". Should check field "evaluationOpportunitySize". If this field contains decimal number (alternatively it can be empty or "NA" or "Unknown" or something else), use it. If there is no number, left tier untouched. No additional lookup needed.
+  1. - [ ]It can include size already. Format "<Number> Users" (i.e. 100 Users or 2000 Users). Or sometimes "Unlimited Users". In this case additional lookup with URL2 is not needed. The number will be processed later.
+  2. - [ ] "Evaluation" or "Demonstration License". Should check field "evaluationOpportunitySize". If this field contains decimal number (alternatively it can be empty or "NA" or "Unknown" or something else), use it. If there is no number, left tier untouched. No additional lookup needed.
   3. Subscription. This is the case when additional lookup with URL2 is needed.
   4. Execute request URL2?text=<licenseId>&addon=<addonKey>&sortBy=date&order=desc&limit=1 (to get the last transaction linked to this license).
   5. If something was returned, you need to doublecheck if licenseId in request and response are fully equal, because it's just a search by substring and it, theoretically, can return mismatched result.
