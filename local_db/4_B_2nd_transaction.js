@@ -27,7 +27,7 @@ module.exports = {
       transactionId: 'AT-132775705',
       addonLicenseId: '20897526',
       hostLicenseId: '9400972',
-      licenseId: 'SEN-9400972',
+      licenseId: 'SEN-9400973',
       addonKey: 'com.stiltsoft.confluence.handy.macros',
       addonName: 'Handy Macros for Confluence',
       lastUpdated: '2021-03-30',

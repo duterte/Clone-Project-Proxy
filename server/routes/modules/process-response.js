@@ -8,7 +8,12 @@ const request = require('./requests');
 const appConfig = require(path.resolve('app.config.json'));
 
 async function processResponse(response) {
-  if (!response.licenses) {
+  if (!response) {
+    // No response is returned
+    // Due to following reason:
+    // 1. Network failure/Communication failure
+    // 2. Remote server does not have the resources
+  } else if (!response.licenses) {
     throw new Error('license property did not exists');
   } else if (!(response.licenses instanceof Array)) {
     throw new Error('response is not a type of array');
@@ -44,12 +49,9 @@ async function processResponse(response) {
             const tier2 = convertNumUser(tiers[i]);
             console.log(tier2);
           } else if (/^Evaluation$/i.test(tiers[i])) {
-            // response.licenses[i].evaluationOpportunitySize
-            // processEvaluation()
+            evaluationOpportunityValue(response, i);
           } else if (/^Demonstration\sLicense$/i.test(tiers[i])) {
-            //
-            //
-            //
+            evaluationOpportunityValue(response, i);
           } else if (/^Subscription$/i.test(tiers[i])) {
             const URL2 = atlassian.url2.replace(
               ':vendorId',
@@ -71,7 +73,8 @@ async function processResponse(response) {
                 entry.licenseId === response.licenses[i].licenseId &&
                 entry.transaction
             );
-
+            console.log('duplicateRequest');
+            console.log(duplicateRequest);
             if (!duplicateRequest) {
               const response2 = await request({
                 urlPathParam: URL2,
@@ -81,10 +84,11 @@ async function processResponse(response) {
                 .ensureFile(tmpFilePath)
                 .then(() => {
                   const writeStream = fs.createWriteStream(tmpFilePath);
-                  writeStream.write(JSON.stringify(response2, null, 2));
+                  writeStream.write(JSON.stringify(response2 || {}, null, 2));
                   writeStream.end();
+
                   requestReceivedTracker.push({
-                    licenseId: response2.transactions[0].licenseId,
+                    licenseId: response.licenses[0].licenseId,
                     transaction: true,
                     license: false,
                     outputId: id,
@@ -92,12 +96,14 @@ async function processResponse(response) {
                 })
                 .then(() => {
                   console.log('response2 remote data');
-                  processSubscription(response2, i);
+                  const subs = processSubscription(response, response2, i);
+                  console.log(subs);
                 })
                 .catch((err) => {
                   throw err;
                 });
             } else {
+              console.log('response2 local data');
               fs.readFile(
                 path.resolve(tmpDirPath, duplicateRequest.outputId + '.json'),
                 'utf8',
@@ -106,9 +112,8 @@ async function processResponse(response) {
                     throw err;
                   } else {
                     const response2 = JSON.parse(data);
-                    console.log('response2 local data');
-                    // console.log(response2);
-                    processSubscription(response2, i);
+                    const subs = processSubscription(response, response2, i);
+                    console.log(subs);
                   }
                 }
               );
@@ -122,38 +127,62 @@ async function processResponse(response) {
         throw err;
       });
 
-    function processSubscription(response2, i) {
+    function processSubscription(response, response2, i) {
       if (!response2) {
         // No response is returned
         // Due to following reason:
         // 1. Network failure/Communication failure
         // 2. Remote server does not have the resources
         // No response is treated as unsucessfull
-      } else if (response2 && !response2.transactions.length) {
+
+        return evaluationOpportunityValue(response, i);
+      } else if (!response2.transactions) {
         // No transaction
-        // Noe transaction is treated as unscessfull
+        // because the JSON object
+        // does not really contain transactions property
+        // No transaction is treated as unscessfull
+        return evaluationOpportunityValue(response, i);
+      } else if (response2.transactions && !response2.transactions[0].length) {
+        // No transaction
+        // because transactions property contain
+        // an empty array
+        // No transaction is treated as unscessfull
+        return evaluationOpportunityValue(response, i);
       } else {
         const license1 = response.licenses[i].licenseId;
         const license2 = response2.transactions[0].licenseId;
         if (license1 !== license2) {
           // mismatch result
           // mismatch result is treated as unsucessfull
+          return evaluationOpportunityValue(response, i);
         } else {
-          const extractTier = response2.transactions[0].purchaseDetails.tier.match(
-            /(\d+|Unlimited)\susers/i
-          )[0];
+          const tier = response2.transactions[0].purchaseDetails.tier;
+          const extractTier = tier.match(/(\d+|Unlimited)\susers/i)[0];
           return convertNumUser(extractTier);
         }
       }
     }
 
+    function evaluationOpportunityValue(response, i) {
+      const str = response.licenses[i].evaluationOpportunitySize;
+      let match = undefined;
+      if (str) {
+        match = str.match(/(\d+)/);
+      }
+      if (match) {
+        return convertNumUser(match[0]);
+      } else {
+        return response.licenses[i].tier;
+      }
+    }
+
     function convertNumUser(string) {
-      const match = string.match(/(\d+|Unlimited)\sUsers/i)[1];
+      string = string.toString();
+      const match = string.match(/(\d+|Unlimited)(\sUsers)?/i)[1];
       const unlimited = Boolean(match.toLowerCase() === 'unlimited');
       const int = parseInt(match);
       const num = unlimited ? 'Unlimited' : int;
       let size = undefined;
-
       if (num >= 1 && num <= 10) {
         size = 'S';
       } else if (num >= 11 && num <= 50) {

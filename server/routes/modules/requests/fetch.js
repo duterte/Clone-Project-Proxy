@@ -17,7 +17,7 @@ async function makeFetchRequest(object) {
   return fetch(url, options)
     .then((res) => res.json())
     .catch((err) => {
-      throw err;
+      return undefined;
     });
 }
 

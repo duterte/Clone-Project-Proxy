@@ -20,7 +20,6 @@
   },
   "nodemonConfig": {
     "ignore": [
-      "/remote_dev_server_test/*",
       "/remote_test/*",
       "/tmp/*"
     ]
