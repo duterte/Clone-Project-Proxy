@@ -7,7 +7,6 @@ const querystring = require('querystring');
 
 const express = require('express');
 const { request, processResponse } = require('./modules');
-// const { execFile } = require('child_process');
 const appConfig = require(path.resolve('app.config.json'));
 
 const router = express.Router();
@@ -32,8 +31,8 @@ router.get('/', async (req, res) => {
 
     const queryParam = '?' + querystring.stringify(query);
     const response = await request({ urlPathParam: URL1, queryParam });
-    await processResponse(response);
-    return res.json('Working !!!');
+    const process = await processResponse(response);
+    return res.json(process);
   } catch (err) {
     console.log(err);
     return res.status(500).end();

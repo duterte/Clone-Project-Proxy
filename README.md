@@ -19,7 +19,7 @@
      1. - [x] Get transactions/purchaseDetails/tier, it should be like "Per Unit Pricing (27 users)". Extracted number is the resulting license size.
      1. - [x] If attempt to get license size from URL2 was unsuccessful, then app should try to get decimal value from evaluationOpportunitySize field from URL1 response (as in the "Evaluation" case).
 
-- [ ] If on the previous step a number (license size) were obtained, it should be converted to one of buckets:
+- [x] If on the previous step a number (license size) were obtained, it should be converted to one of buckets:
 
   1. - [x] 1-10: S
   1. - [x] 11-50: M
@@ -28,4 +28,11 @@
   1. - [x] 1251-6250: 2XL
   1. - [x] 6251+ or Unlimited: 3XL
 
-- [ ] The resulted value should replace the original tier and returned as response.
+- [x] The resulted value should replace the original tier and returned as response.
+
+### Testing Plan
+
+- [x] Tested in local server
+- [ ] Tested remote server
+- [ ] Can make 100 additional request to remote server
+- [ ] server response within 60ms

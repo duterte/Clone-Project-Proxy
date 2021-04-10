@@ -5,7 +5,8 @@
 /pipes/
 /tmp/
 /temp/
-*test
+/_test*
+/*test
 
 # files
 .env

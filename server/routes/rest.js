@@ -2,8 +2,6 @@ const path = require('path');
 const express = require('express');
 const router = express.Router();
 
-const local_db = require(path.resolve('local_db'));
-
 router.get('/2/vendors/:vendorId/reporting/licenses', (req, res) => {
   console.log('licenses');
   const local_db = require(path.resolve('local_db'));

@@ -20,7 +20,7 @@ async function processResponse(response) {
   } else if (response.length > 100) {
     throw new Error('morethan 100 licenses found');
   } else {
-    const { atlassian, tmpDirPath } = appConfig;
+    const { atlassian, tmpDirPath, removeTmpFile } = appConfig;
     const requestReceivedTracker = [];
     const id = uuid().split('-').join('');
     const tmpFilePath = path.join(tmpDirPath, id + '.json');
@@ -43,15 +43,14 @@ async function processResponse(response) {
 
         // Will do a loop max iteration count is 100
         // O(n)
-
+        // const test = [];
         for (let i = 0; i < tiers.length; i++) {
           if (/^(\d+|Unlimited)\sUsers$/i.test(tiers[i])) {
-            const tier2 = convertNumUser(tiers[i]);
-            console.log(tier2);
+            response.licenses[i].tier = convertNumUser(tiers[i]);
           } else if (/^Evaluation$/i.test(tiers[i])) {
-            evaluationOpportunityValue(response, i);
+            response.licenses[i].tier = evaluationOpportunityValue(response, i);
           } else if (/^Demonstration\sLicense$/i.test(tiers[i])) {
-            evaluationOpportunityValue(response, i);
+            response.licenses[i].tier = evaluationOpportunityValue(response, i);
           } else if (/^Subscription$/i.test(tiers[i])) {
             const URL2 = atlassian.url2.replace(
               ':vendorId',
@@ -73,8 +72,6 @@ async function processResponse(response) {
                 entry.licenseId === response.licenses[i].licenseId &&
                 entry.transaction
             );
-            console.log('duplicateRequest');
-            console.log(duplicateRequest);
             if (!duplicateRequest) {
               const response2 = await request({
                 urlPathParam: URL2,
@@ -95,33 +92,34 @@ async function processResponse(response) {
                   });
                 })
                 .then(() => {
-                  console.log('response2 remote data');
                   const subs = processSubscription(response, response2, i);
-                  console.log(subs);
+                  response.licenses[i].tier = subs;
                 })
                 .catch((err) => {
                   throw err;
                 });
             } else {
-              console.log('response2 local data');
-              fs.readFile(
-                path.resolve(tmpDirPath, duplicateRequest.outputId + '.json'),
-                'utf8',
-                (err, data) => {
-                  if (err) {
-                    throw err;
-                  } else {
-                    const response2 = JSON.parse(data);
-                    const subs = processSubscription(response, response2, i);
-                    console.log(subs);
-                  }
-                }
+              const filePath = path.resolve(
+                tmpDirPath,
+                duplicateRequest.outputId + '.json'
               );
+              await fs.promises
+                .readFile(filePath, 'utf-8')
+                .then((data) => {
+                  const response2 = JSON.parse(data);
+                  const subs = processSubscription(response, response2, i);
+                  response.licenses[i].tier = subs;
+                })
+                .catch((err) => {
+                  throw err;
+                });
             }
           } else {
             throw new Error('tier property value is not valid');
           }
         }
+        // console.log(response)
+        // return response;
       })
       .catch((err) => {
         throw err;
@@ -200,7 +198,19 @@ async function processResponse(response) {
       }
       return size;
     }
+
+    if (removeTmpFile) {
+      const jsonFile = requestReceivedTracker.map((i) => i.outputId + '.json');
+      for (const json of jsonFile) {
+        const tmpFilePath = path.resolve(tmpDirPath, json);
+        fs.remove(tmpFilePath).catch((err) => {
+          throw err;
+        });
+      }
+    }
   }
+
+  return response;
 }
 
 module.exports = processResponse;

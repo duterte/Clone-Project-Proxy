@@ -1,8 +1,9 @@
 {
   "tmpDirPath": "tmp",
+  "removeTmpFile": true,
   "atlassian": {
     "vendorId": 27437,
-    "remoteDNS": null,
+    "remoteDNS": "http://localhost:3000",
     "url1": "/rest/2/vendors/:vendorId/reporting/licenses",
     "url2": "/rest/2/vendors/:vendorId/reporting/sales/transactions"
   }
