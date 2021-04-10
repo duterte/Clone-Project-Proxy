@@ -46,7 +46,7 @@ module.exports = {
       },
       purchaseDetails: {
         saleDate: '2021-03-28',
-        tier: 'Per Unit Pricing (10 users)',
+        tier: 'Per Unit Pricing (Unlimited users)',
         licenseType: 'COMMERCIAL',
         hosting: 'Cloud',
         billingPeriod: 'Monthly',

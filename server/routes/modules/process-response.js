@@ -2,6 +2,7 @@
 
 const fs = require('fs-extra');
 const path = require('path');
+const querystring = require('querystring');
 const { v4: uuid } = require('uuid');
 const request = require('./requests');
 const appConfig = require(path.resolve('app.config.json'));
@@ -15,30 +16,41 @@ async function processResponse(response) {
     throw new Error('morethan 100 licenses found');
   } else {
     const { atlassian, tmpDirPath } = appConfig;
-
+    const requestReceivedTracker = [];
     const id = uuid().split('-').join('');
     const tmpFilePath = path.join(tmpDirPath, id + '.json');
+
     await fs
       .ensureFile(tmpFilePath)
       .then(() => {
         const writeStream = fs.createWriteStream(tmpFilePath);
         writeStream.write(JSON.stringify(response, null, 2));
         writeStream.end();
+        requestReceivedTracker.push({
+          licenseId: response.licenses[0].licenseId,
+          transaction: false,
+          license: true,
+          outputId: id,
+        });
       })
       .then(async () => {
         const tiers = response.licenses.map((item) => item.tier);
 
+        // Will do a loop max iteration count is 100
+        // O(n)
+
         for (let i = 0; i < tiers.length; i++) {
-          if (/^(\d+|Unlimited)\sUsers$/.test(tiers[i])) {
-            response.licenses[i].tier = convertNumUser(tiers[i]);
-          } else if (/^Evaluation$/.test(tiers[i])) {
+          if (/^(\d+|Unlimited)\sUsers$/i.test(tiers[i])) {
+            const tier2 = convertNumUser(tiers[i]);
+            console.log(tier2);
+          } else if (/^Evaluation$/i.test(tiers[i])) {
             // response.licenses[i].evaluationOpportunitySize
             // processEvaluation()
-          } else if (/^Demonstration\sLicense$/.test(tiers[i])) {
+          } else if (/^Demonstration\sLicense$/i.test(tiers[i])) {
             //
             //
             //
-          } else if (/^Subscription$/.test(tiers[i])) {
+          } else if (/^Subscription$/i.test(tiers[i])) {
             const URL2 = atlassian.url2.replace(
               ':vendorId',
               atlassian.vendorId
@@ -51,12 +63,58 @@ async function processResponse(response) {
               limit: 1,
             };
             const queryParam = '?' + querystring.stringify(query);
-            const response = await request({ urlPathParam: URL2, queryParam });
-            //
-            //
-            //
+
+            const id = uuid().split('-').join('');
+            const tmpFilePath = path.join(tmpDirPath, id + '.json');
+            const duplicateRequest = requestReceivedTracker.find(
+              (entry) =>
+                entry.licenseId === response.licenses[i].licenseId &&
+                entry.transaction
+            );
+
+            if (!duplicateRequest) {
+              const response2 = await request({
+                urlPathParam: URL2,
+                queryParam,
+              });
+              await fs
+                .ensureFile(tmpFilePath)
+                .then(() => {
+                  const writeStream = fs.createWriteStream(tmpFilePath);
+                  writeStream.write(JSON.stringify(response2, null, 2));
+                  writeStream.end();
+                  requestReceivedTracker.push({
+                    licenseId: response2.transactions[0].licenseId,
+                    transaction: true,
+                    license: false,
+                    outputId: id,
+                  });
+                })
+                .then(() => {
+                  console.log('response2 remote data');
+                  processSubscription(response2, i);
+                })
+                .catch((err) => {
+                  throw err;
+                });
+            } else {
+              fs.readFile(
+                path.resolve(tmpDirPath, duplicateRequest.outputId + '.json'),
+                'utf8',
+                (err, data) => {
+                  if (err) {
+                    throw err;
+                  } else {
+                    const response2 = JSON.parse(data);
+                    console.log('response2 local data');
+                    // console.log(response2);
+                    processSubscription(response2, i);
+                  }
+                }
+              );
+            }
           } else {
-            throw new Error('value of tier property is unrecognized');
+            throw new Error('tier property value is not valid');
           }
         }
       })
@@ -64,14 +122,36 @@ async function processResponse(response) {
         throw err;
       });
 
-    function convertNumUser(string) {
-      const num =
-        string.split(' ')[0] === NaN
-          ? string.split(' ')[0].toLowerCase() === 'unlimited'
-            ? 'Unlimited'
-            : undefined
-          : Number(string.split(' ')[0]);
+    function processSubscription(response2, i) {
+      if (!response2) {
+        // No response is returned
+        // Due to following reason:
+        // 1. Network failure/Communication failure
+        // 2. Remote server does not have the resources
+        // No response is treated as unsucessfull
+      } else if (response2 && !response2.transactions.length) {
+        // No transaction
+        // Noe transaction is treated as unscessfull
+      } else {
+        const license1 = response.licenses[i].licenseId;
+        const license2 = response2.transactions[0].licenseId;
+        if (license1 !== license2) {
+          // mismatch result
+          // mismatch result is treated as unsucessfull
+        } else {
+          const extractTier = response2.transactions[0].purchaseDetails.tier.match(
+            /(\d+|Unlimited)\susers/i
+          )[0];
+          return convertNumUser(extractTier);
+        }
+      }
+    }
 
+    function convertNumUser(string) {
+      const match = string.match(/(\d+|Unlimited)\sUsers/i)[1];
+      const unlimited = Boolean(match.toLowerCase() === 'unlimited');
+      const int = parseInt(match);
+      const num = unlimited ? 'Unlimited' : int;
       let size = undefined;
 
       if (num >= 1 && num <= 10) {
