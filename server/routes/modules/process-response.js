@@ -209,7 +209,6 @@ async function processResponse(response) {
       }
     }
   }
-
   return response;
 }
 

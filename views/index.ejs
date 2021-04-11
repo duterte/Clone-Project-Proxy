@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="preload" type="font/ttf" href="/fonts/Montserrat-Regular.ttf" as="font" crossorigin>
+  <link rel="preload" type="font/ttf" href="fonts/Nunito-Regular.ttf" as="font" crossorigin>
+  <style>
+    @font-face {
+      font-family: 'Montseratt';
+      src: url("fonts/Montserrat-Regular.ttf");
+    }
+
+    @font-face {
+      font-family: 'Nunito';
+      src: url("fonts/Nunito-Regular.ttf");
+    }
+  </style>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon">
+  <title>Mock Up</title>
+</head>
+<body>
+  <div class="wrapper query-param">
+    <h2>QUERY PARAMETERS</h3>
+      <div class="text">
+        <h3>text</h3>
+        <ul>
+          <li><label><input type="checkbox" value="SEN-21879901">SEN-21879901</label></li>
+          <li><label><input type="checkbox" value="SEN-L16990362">SEN-L16990362</label></li>
+          <li><label><input type="checkbox" value="SEN-22049430">SEN-22049430</label></li>
+          <li><label><input type="checkbox" value="SEN-9400972">SEN-9400972</label></li>
+        </ul>
+      </div>
+  </div>
+  <div class="wrapper box">
+    <div class="input">
+      <span class="request-header">GET</span><span class="request-header-value">https://atlasian.domain.com/rest/.../licenses?</span><input type="text" id="param-value">
+    </div>
+    <span class="request-header">Accept</span> 
+    <select class="request-header-value" id="accept-type">
+      <option value="application/json">application/json</option>
+      <option value="text/html">text/html</option>
+    </select>
+    <span class="app-prim-button" id="send-request">SEND REQUEST</span>
+  </div>
+  <div class="wrapper" id="json-wrapper">
+  </div>
+  <script src="/js/renderjson.js"></script>
+  <script src="/js/script.js"></script>
+</body>
+</html>

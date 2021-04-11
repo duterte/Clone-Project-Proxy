@@ -1,3 +1,10 @@
+### Installation Instruction
+
+- requires NodeJS version 12+
+- open OS terminal or console
+- install npm packages by running `npm install` command in the terminal
+- then start the server by `node .`
+
 ### TASK
 
 - [ ] Check auth of an incoming request. Every access attempt (both successful and not successful) should be logged (log params and username from provided credentials).
@@ -35,4 +42,4 @@
 - [x] Tested in local server
 - [ ] Tested remote server
 - [ ] Can make 100 additional request to remote server
-- [ ] server response within 60ms
+- [ ] server response within 60ms or faster than 60ms

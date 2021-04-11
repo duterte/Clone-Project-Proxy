@@ -19,6 +19,7 @@ if (cluster.isMaster && process.env.NODE_ENV === 'production') {
 } else {
   app.listen(PORT, () => console.log('server is running @ PORT ' + PORT));
   app.disable('x-powered-by');
+  app.set('view engine', 'ejs');
   app.use(express.json());
   modules.routes(express, app);
 }
