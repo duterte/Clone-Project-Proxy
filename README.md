@@ -5,6 +5,18 @@
 - install npm packages by running `npm install` command in the terminal
 - then start the server by `node .`
 
+### app.config.json
+
+app.config.json is the app configuration and settings by just modifying value of each property you can fine tune the settings of the applications
+
+---
+
+| property | possible value | description |
+
+---
+
+| tmpDirPath | "string" | directory of the temporary files this will be located at the root directory of the app and will be dynamically created by the system.
+
 ### TASK
 
 - [ ] Check auth of an incoming request. Every access attempt (both successful and not successful) should be logged (log params and username from provided credentials).
