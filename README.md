@@ -5,13 +5,15 @@
 - install npm packages by running `npm install` command in the terminal
 - then start the server by `node .`
 
+to set the app for production use add `NODE_ENV=production` into .env file, create .env file if none exist.
+
 ### app.config.json
 
 app.config.json is the app configuration and settings by just modifying value of each property you can fine tune the settings of the applications
 
 | property      | possible value | description                                                |
 | ------------- | -------------- | ---------------------------------------------------------- |
-| tmpDirPath    | "string"       | directory of temporary files                               |
+| tmpDirPath    | string         | directory of temporary files                               |
 | removeTmpFile | boolean        | wether or not temporary files remove after process is done |
 | atlassian     | object         | configuration for the proxy request                        |
 

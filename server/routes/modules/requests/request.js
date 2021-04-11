@@ -6,7 +6,13 @@ const { v4: uuid } = require('uuid');
 const appConfig = require(path.resolve('app.config.json'));
 
 const requests = require('requests');
-const domain = appConfig.atlassian.remoteDNS || 'http://localhost:5000';
+const { atlassian } = appConfig;
+const selectDns =
+  process.env.NODE_ENV === 'production'
+    ? atlassian.remoteDNS
+    : atlassian.localDNS;
+
+const domain = selectDns || 'http://localhost:5000';
 const urlPathParam = process.argv[2] || '/';
 const query = process.argv[3] || '';
 const url = domain + urlPathParam + query;
