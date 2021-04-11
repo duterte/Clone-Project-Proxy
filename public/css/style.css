@@ -447,11 +447,10 @@ h6 {
 #json-wrapper {
   display: none;
   overflow: auto;
-  background: #000000e8;
+  background: #1e1e1e;
   margin-top: 2em;
   margin-bottom: 2em;
   padding: 1em;
-  color: #ffffffc2;
 }
 
 #json-wrapper code {
@@ -460,5 +459,28 @@ h6 {
 
 #json-wrapper a {
   color: pink;
+}
+
+#json-wrapper .object,
+#json-wrapper .array,
+#json-wrapper .syntax {
+  color: #d4d4d4;
+}
+
+#json-wrapper .key {
+  color: #9cdcfe;
+}
+
+#json-wrapper .string {
+  color: #ce9178;
+}
+
+#json-wrapper .boolean,
+#json-wrapper .keyword {
+  color: #569cd6;
+}
+
+#json-wrapper .number {
+  color: #b5cea8;
 }
 /*# sourceMappingURL=style.css.map */
