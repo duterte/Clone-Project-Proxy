@@ -3,7 +3,8 @@
   "removeTmpFile": true,
   "atlassian": {
     "vendorId": 27437,
-    "remoteDNS": "http://localhost:3000",
+    "remoteDNS": "https://atlassian-domain.herokuapp.com",
+    "localDNS": "http://localhost:3000",
     "url1": "/rest/2/vendors/:vendorId/reporting/licenses",
     "url2": "/rest/2/vendors/:vendorId/reporting/sales/transactions"
   }
