@@ -11,9 +11,9 @@ app.config.json is the app configuration and settings by just modifying value of
 
 | property | possible value | description |
 
-| -------- | -------------- | ----------- |
+| -------- | :--------------: | -----------: |
 
-| tmpDirPath | "string" | directory of the temporary files this will be located at the root directory of the app and will be dynamically created by the system. |
+| tmpDirPath | "string" | Hello |
 
 ### TASK
 
