@@ -5,17 +5,29 @@
 - install npm packages by running `npm install` command in the terminal
 - then start the server by `node .`
 
-to set the app for production use add `NODE_ENV=production` into .env file, create .env file if none exist.
+to set the app for production use add `NODE_ENV=production` into .env file, create .env file if none exist. You can also add `PORT=<port number>` into .env file to make the app run into desire port, default port is `3000`.
 
 ### app.config.json
 
 app.config.json is the app configuration and settings by just modifying value of each property you can fine tune the settings of the applications
 
-| property      | possible value | description                                                |
-| ------------- | -------------- | ---------------------------------------------------------- |
-| tmpDirPath    | string         | directory of temporary files                               |
-| removeTmpFile | boolean        | wether or not temporary files remove after process is done |
-| atlassian     | object         | configuration for the proxy request                        |
+**app.config.json has the following property and value**
+
+| property      | possible value | description                                                         |
+| ------------- | -------------- | ------------------------------------------------------------------- |
+| tmpDirPath    | string         | directory of temporary files                                        |
+| removeTmpFile | boolean        | wether or not temporary files is to be remove after process is done |
+| atlassian     | object         | configuration for the proxy request                                 |
+
+**atlassian property and value**
+
+| property  | possible value | description                                                                                                                                                                      |
+| --------- | -------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| vendorId  | number         | as specified on atlassian documentation path parameter should contain vendorId. This vendorId is here to quickly changed the vendorId if nessary                                 |
+| remoteDNS | string         | this is use in production, this should contain the remote url domain ex: https://atlassian.com . Domain should point to whereever the request should be sent by this NodeJS app. |
+| localDNS  | string         | this is use in development this string can contain http://localhost:3000 like soe                                                                                                |
+| url1      | string         | url path parameter for the first request                                                                                                                                         |
+| url2      | string         | url path for the suceeding request                                                                                                                                               |
 
 ### TASK
 
