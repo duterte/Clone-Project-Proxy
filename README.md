@@ -9,11 +9,11 @@
 
 app.config.json is the app configuration and settings by just modifying value of each property you can fine tune the settings of the applications
 
-| property | possible value | description |
-
-| -------- | :--------------: | -----------: |
-
-| tmpDirPath | "string" | Hello |
+| property      | possible value | description                                                |
+| ------------- | -------------- | ---------------------------------------------------------- |
+| tmpDirPath    | "string"       | directory of temporary files                               |
+| removeTmpFile | boolean        | wether or not temporary files remove after process is done |
+| atlassian     | object         | configuration for the proxy request                        |
 
 ### TASK
 
