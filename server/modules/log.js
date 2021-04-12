@@ -9,8 +9,6 @@ function log(req, res, next) {
   const logsFolder = appConfig.logsDirName;
   const logFileName = appConfig.accessLogFileName;
   const logFilePath = path.resolve(logsFolder, logFileName);
-
-  console.log(moment.utc().utcOffset(0).toString());
   const timestamp = moment.utc().utcOffset(0).toString();
   const forward = 'forward=' + req.ip;
   const method = 'method=' + req.method;
@@ -20,12 +18,8 @@ function log(req, res, next) {
   const pid = 'pid=' + process.pid;
   const data = `${timestamp} ${pid} ${forward} ${method} ${protocol} ${host} ${requestpath}`;
   fs.ensureFile(logFilePath)
-    .then(() => {
-      fs.appendFile(logFilePath, data + '\r\n', 'utf-8');
-    })
-    .catch(() => {
-      // do nothing ignore any error
-    });
+    .then(() => fs.appendFile(logFilePath, data + '\r\n', 'utf-8'))
+    .catch(() => '');
   next();
 }
 
