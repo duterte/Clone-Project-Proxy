@@ -31,7 +31,7 @@ app.config.json is the app configuration and settings by just. This implementati
 
 ### TASK
 
-- [ ] Check auth of an incoming request. Every access attempt (both successful and not successful) should be logged (log params and username from provided credentials).
+- [x] Check auth of an incoming request. Every access attempt (both successful and not successful) should be logged (log params and username from provided credentials).
 
 - [x] Get all params from incoming requests.
 
