@@ -2,7 +2,8 @@
 
 require('dotenv').config();
 const express = require('express');
-const modules = require('./modules');
+const helmet = require('helmet');
+const { routes, auth, log } = require('./modules');
 const cluster = require('cluster');
 const cpus = require('os').cpus().length;
 const app = express();
@@ -18,9 +19,11 @@ if (cluster.isMaster && process.env.NODE_ENV === 'production') {
   });
 } else {
   app.listen(PORT, () => console.log('server is running @ PORT ' + PORT));
+  app.use(helmet());
   app.disable('x-powered-by');
   app.set('view engine', 'ejs');
-  app.set('trust proxy', true);
   app.use(express.json());
-  modules.routes(express, app);
+  app.use(auth);
+  app.use(log);
+  routes(express, app);
 }

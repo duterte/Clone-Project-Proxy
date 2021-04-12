@@ -19,7 +19,16 @@ sendRequest.addEventListener('click', (e) => {
   const paramValue = document.querySelector('#param-value');
   if (paramValue.value) {
     if (acceptType.value === 'application/json') {
-      fetch(`/query?${paramValue.value}`)
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+
+      const init = {
+        headers: {
+          Accept: 'application/json',
+          Authorization: `Basic ${username}:${password}`,
+        },
+      };
+      fetch(`/query?${paramValue.value}`, init)
         .then((response) => response.json())
         .then((data) => {
           console.log(data);

@@ -373,6 +373,10 @@ h6 {
   cursor: pointer;
 }
 
+input {
+  outline: none;
+}
+
 .wrapper {
   max-width: 900px;
   margin: 0 auto;
@@ -406,14 +410,20 @@ h6 {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
   font-size: 1.2em;
   margin-bottom: 2em;
 }
 
+.input > * {
+  margin-bottom: 0.5em;
+}
+
 .input input[type='text'] {
   -webkit-box-flex: 1;
-      -ms-flex: 1 0 auto;
-          flex: 1 0 auto;
+      -ms-flex: 1 1 auto;
+          flex: 1 1 auto;
   position: relative;
   bottom: 0.2em;
 }
@@ -482,5 +492,20 @@ h6 {
 
 #json-wrapper .number {
   color: #b5cea8;
+}
+
+.auth {
+  margin-top: 2em;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: end;
+      -ms-flex-pack: end;
+          justify-content: flex-end;
+  font-size: 1em;
+}
+
+.auth :not(:first-child) {
+  margin-left: 1em;
 }
 /*# sourceMappingURL=style.css.map */

@@ -1,7 +1,14 @@
-const licenses = require('./licenses');
-const user_db = require('./user_credentials');
+'use stritct';
 
-module.exports = {
-  licenses,
-  user_db,
-};
+const fs = require('fs');
+const path = require('path');
+
+module.exports = (() => {
+  const list = {};
+  const files = fs.readdirSync(__dirname);
+  for (const file of files) {
+    if (file === 'index.js') continue;
+    list[file] = require(`./${file}`);
+  }
+  return list;
+})();

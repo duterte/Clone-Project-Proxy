@@ -9,7 +9,7 @@ to set the app for production use add `NODE_ENV=production` into .env file, crea
 
 ### app.config.json
 
-app.config.json is the app configuration and settings by just modifying value of each property you can fine tune the settings of the applications
+app.config.json is the app configuration and settings by just. This implementation is better than modifying source code everytime you need to change some feature or functionality
 
 **app.config.json has the following property and value**
 
@@ -21,13 +21,13 @@ app.config.json is the app configuration and settings by just modifying value of
 
 **atlassian property and value**
 
-| property  | possible value | description                                                                                                                                                                     |
-| --------- | -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| vendorId  | number         | as specified on atlassian documentation path parameter should contain vendorId. This vendorId is here to quickly changed the vendorId if nessary                                |
-| remoteDNS | string         | this is use in production, this should contain the remote url domain ex: https://atlassian.com . Domain should point to wherever the request should be sent by this NodeJS app. |
-| localDNS  | string         | this is use in development this string can contain http://localhost:3000 like soe                                                                                               |
-| url1      | string         | url path parameter for the first request                                                                                                                                        |
-| url2      | string         | url path for the suceeding request                                                                                                                                              |
+| property  | possible value | description                                                                                                                                                                                          |
+| --------- | -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| vendorId  | number         | as specified on atlassian documentation path parameter should contain vendorId. This vendorId is here to quickly changed the vendorId if nessary                                                     |
+| remoteDNS | string         | this is use in production, this should contain the remote url domain ex: https://atlassian.com . Domain should point to wherever the request should be sent by this NodeJS app.                      |
+| localDNS  | string         | this is use in development this string can contain http://localhost:3000 like so                                                                                                                     |
+| url1      | string         | url path parameter for the first request note the `:vendorId` within the path this is required and should not be removed 'cause this will get replace with vendorId number dynamically by the system |
+| url2      | string         | url path for the suceeding request, This is the same as url1                                                                                                                                         |
 
 ### TASK
 
@@ -42,10 +42,10 @@ app.config.json is the app configuration and settings by just modifying value of
 
 - [x] Get value of "tier" field and determine license size.
 
-  1. - [x] It can include size already. Format "<Number> Users" (i.e. 100 Users or 2000 Users). Or sometimes "Unlimited Users". In this case additional lookup with URL2 is not needed. The number will be processed later.
+  1. - [x] It can include size already. Format `<Number> Users` (i.e. 100 Users or 2000 Users). Or sometimes "Unlimited Users". In this case additional lookup with URL2 is not needed. The number will be processed later.
   1. - [x] "Evaluation" or "Demonstration License". Should check field "evaluationOpportunitySize". If this field contains decimal number (alternatively it can be empty or "NA" or "Unknown" or something else), use it. If there is no number, left tier untouched. No additional lookup needed.
   1. - [x] Subscription. This is the case when additional lookup with URL2 is needed.
-     1. - [x] Execute request URL2?text=<licenseId>&addon=<addonKey>&sortBy=date&order=desc&limit=1 (to get the last transaction linked to this license).
+     1. - [x] Execute request `URL2?text=<licenseId>&addon=<addonKey>&sortBy=date&order=desc&limit=1` (to get the last transaction linked to this license).
      1. - [x] If something was returned, you need to doublecheck if licenseId in request and response are fully equal, because it's just a search by substring and it, theoretically, can return mismatched result.
      1. - [x] Get transactions/purchaseDetails/tier, it should be like "Per Unit Pricing (27 users)". Extracted number is the resulting license size.
      1. - [x] If attempt to get license size from URL2 was unsuccessful, then app should try to get decimal value from evaluationOpportunitySize field from URL1 response (as in the "Evaluation" case).

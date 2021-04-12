@@ -6,12 +6,12 @@ const path = require('path');
 const querystring = require('querystring');
 
 const express = require('express');
-const { request, processResponse } = require('./modules');
+const { request, processResponse, authenticate } = require('./modules');
 const appConfig = require(path.resolve('app.config.json'));
 
 const router = express.Router();
 
-router.get('/', async (req, res) => {
+router.get('/', authenticate, async (req, res) => {
   try {
     const { atlassian } = appConfig;
     const URL1 = atlassian.url1.replace(':vendorId', atlassian.vendorId);
@@ -35,13 +35,24 @@ router.get('/', async (req, res) => {
 
     const queryParam = '?' + querystring.stringify(query);
     const response = await request({ urlPathParam: URL1, queryParam });
-    const process = await processResponse(response);
-    return res.status(200).json(process);
+    let process = await processResponse(response);
+    const acceptType = req.headers.accept.split(',')[0];
+
+    if (!process) process = `${process}`;
+    if (acceptType === 'application/json') {
+      return res.status(200).json(process);
+    } else {
+      return res
+        .status(200)
+        .contentType('text/plain')
+        .send(JSON.stringify(process, null, 2));
+    }
   } catch (err) {
+    console.log(err);
     if (err.code === 400) {
       return res.status(400).json(`Bad Request: ${err.message}`);
     } else {
-      return res.status(500).json('Uncaught error occur in ther server');
+      return res.status(500).json('Uncaught error occur in the server');
     }
   }
 });

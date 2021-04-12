@@ -1,5 +1,7 @@
 {
-  "tmpDirPath": "tmp",
+  "tmpDirName": "tmp",
+  "logsDirName": "logs",
+  "accessLogFileName": "access.log.txt",
   "removeTmpFile": true,
   "atlassian": {
     "vendorId": 27437,

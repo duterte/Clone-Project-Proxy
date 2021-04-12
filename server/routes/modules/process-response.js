@@ -20,10 +20,10 @@ async function processResponse(response) {
   } else if (response.length > 100) {
     throw new Error('morethan 100 licenses found');
   } else {
-    const { atlassian, tmpDirPath, removeTmpFile } = appConfig;
+    const { atlassian, tmpDirName, removeTmpFile } = appConfig;
     const requestReceivedTracker = [];
     const id = uuid().split('-').join('');
-    const tmpFilePath = path.join(tmpDirPath, id + '.json');
+    const tmpFilePath = path.join(tmpDirName, id + '.json');
 
     await fs
       .ensureFile(tmpFilePath)
@@ -66,7 +66,7 @@ async function processResponse(response) {
             const queryParam = '?' + querystring.stringify(query);
 
             const id = uuid().split('-').join('');
-            const tmpFilePath = path.join(tmpDirPath, id + '.json');
+            const tmpFilePath = path.join(tmpDirName, id + '.json');
             const duplicateRequest = requestReceivedTracker.find(
               (entry) =>
                 entry.licenseId === response.licenses[i].licenseId &&
@@ -100,7 +100,7 @@ async function processResponse(response) {
                 });
             } else {
               const filePath = path.resolve(
-                tmpDirPath,
+                tmpDirName,
                 duplicateRequest.outputId + '.json'
               );
               await fs.promises
@@ -202,7 +202,7 @@ async function processResponse(response) {
     if (removeTmpFile) {
       const jsonFile = requestReceivedTracker.map((i) => i.outputId + '.json');
       for (const json of jsonFile) {
-        const tmpFilePath = path.resolve(tmpDirPath, json);
+        const tmpFilePath = path.resolve(tmpDirName, json);
         fs.remove(tmpFilePath).catch((err) => {
           throw err;
         });
