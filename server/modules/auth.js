@@ -8,9 +8,13 @@ function auth(req, res, next) {
     const authorization = req.headers['authorization'].split(' ')[1];
     const username = authorization.split(':')[0];
     const password = authorization.split(':')[1];
+    if (!username) next();
     const findUser = user.find((i) => i.username === username);
     let pwdMatch = false;
-    if (findUser) pwdMatch = Boolean(findUser.password === password);
+    req.authentication = {};
+    if (findUser) {
+      pwdMatch = Boolean(findUser.password === password);
+    }
     req.authentication = { userExist: Boolean(findUser), pwdMatch };
   }
   next();
