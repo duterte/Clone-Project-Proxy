@@ -1,3 +1,8 @@
+front-end mock-up link : https://atlassian-domain.herokuapp.com/
+
+user: test_user
+pwd: test1234
+
 ### Installation Instruction
 
 - requires NodeJS version 12+
