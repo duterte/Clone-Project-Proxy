@@ -8,8 +8,15 @@
 /_test*
 /*test
 /logs
+/scss/
+/_scss/
+/.vscode/
+/_.vscode/
+
 
 # files
+
+
 .env
 *.txt
 *.debug

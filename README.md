@@ -7,6 +7,22 @@
 
 to set the app for production use add `NODE_ENV=production` into .env file, create .env file if none exist. You can also add `PORT=<port number>` into .env file to make the app run into desire port, default port is `3000`.
 
+### User Authentication
+
+The app will authenticate incoming request for the proxy routes before sending it to the remote endpoints
+
+As specified the functionality of the app should respond to `GET` request. The server should look for the `authorization` in the request header and that `authorization` header should contain user credential username and password needed for the authentication. the format should be in this way `Authorization: Basic <username>:<password>`
+
+### How user credentials was stored and add or remove user
+
+User credentials that will use to validate user is stored in `local_db > users`. Users credential can be added by manually adding a json file into the directory. JSON file contains a property of username and password. The name of the json file can be anything. The user can also be removed by manually deleting its json file. adding and deleting json files for the user takes effect immediately.
+
+The users password was stored in a plain text not encrypted nor hashed.
+
+### server logging feature
+
+server logs for incoming requests is place in `logs > access.log.txt` folder by default. This folder and text file will be dynamically created the system upon receiving any request. All incoming request is log.
+
 ### app.config.json
 
 app.config.json is the app configuration and settings by just. This implementation is better than modifying source code everytime you need to change some feature or functionality
@@ -28,6 +44,18 @@ app.config.json is the app configuration and settings by just. This implementati
 | localDNS  | string         | this is use in development this string can contain http://localhost:3000 like so                                                                                                                     |
 | url1      | string         | url path parameter for the first request note the `:vendorId` within the path this is required and should not be removed 'cause this will get replace with vendorId number dynamically by the system |
 | url2      | string         | url path for the suceeding request, This is the same as url1                                                                                                                                         |
+
+### Project/Folder Structure
+
+This explains the purpose and the contents of the folder located in the main directory of the app.
+
+- server - This is where the main execution of the server being process receving and responding the request. By running the command `node server` will also start and run the app.
+
+- public - It contains static files use the front-end mock-up. static files are files that doesn't change dynamically by the system whatever is in there it is also the one that user will going to received. **Note** Please don't put any sensitve information in this folder cause this is public means that user will get any information that was in this folder.
+
+- views - This contains the html template file using ejs as the templating engine.
+
+- local_db - this serves as the repository of the local database its a simple one. It contains sub folders that was named after its collection name for example if its a collection of a `user` then the sub folder will be name `user`
 
 ### TASK
 

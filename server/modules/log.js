@@ -16,7 +16,15 @@ function log(req, res, next) {
   const host = 'host=' + req.hostname;
   const requestpath = `path="${req.originalUrl}"`;
   const pid = 'pid=' + process.pid;
-  const data = `${timestamp} ${pid} ${forward} ${method} ${protocol} ${host} ${requestpath}`;
+  let auth = 'auth=false';
+  const authentication = req.authentication;
+  if (authentication && authentication.userExist && authentication.pwdMatch) {
+    auth = `auth=true user=${authentication.username}`;
+  }
+  console.log(req.url);
+  console.log(authentication);
+  const data = `${timestamp} ${pid} ${forward} ${auth} ${method} ${protocol} ${host} ${requestpath}`;
+
   fs.ensureFile(logFilePath)
     .then(() => fs.appendFile(logFilePath, data + '\r\n', 'utf-8'))
     .catch(() => '');
