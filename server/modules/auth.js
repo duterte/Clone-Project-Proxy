@@ -8,19 +8,32 @@ function auth(req, res, next) {
     const authorization = req.headers['authorization'].split(' ')[1];
     const username = authorization.split(':')[0];
     const password = authorization.split(':')[1];
-    if (!username) next();
-    const findUser = users.find((i) => i.username === username);
-    let pwdMatch = false;
-    req.authentication = {};
-    if (findUser) {
-      pwdMatch = Boolean(findUser.password === password);
-    }
-    req.authentication = {
-      userExist: Boolean(findUser),
-      pwdMatch,
-      username: findUser.username,
-      password: findUser.password,
+    const restUrl = {
+      url: /^\/rest/.test(req.url),
+      baseUrl: /^\/rest/.test(req.baseUrl),
     };
+    if (restUrl.url || restUrl.baserUrl) {
+      req.authentication = {
+        userExist: true,
+        pwdMatch: true,
+        username: username,
+        password: password,
+      };
+    } else {
+      if (!username) next();
+      const findUser = users.find((i) => i.username === username);
+      let pwdMatch = false;
+      req.authentication = {};
+      if (findUser) {
+        pwdMatch = Boolean(findUser.password === password);
+      }
+      req.authentication = {
+        userExist: Boolean(findUser),
+        pwdMatch,
+        username: findUser.username,
+        password: findUser.password,
+      };
+    }
   }
   next();
 }

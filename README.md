@@ -12,13 +12,19 @@ pwd: test1234
 
 to set the app for production use add `NODE_ENV=production` into .env file, create .env file if none exist. You can also add `PORT=<port number>` into .env file to make the app run into desire port, default port is `3000`.
 
-### User Authentication
+### Atlasian request authentication
+
+Credentials use for atlassian authentication should be stored in .env file using this format `atlassian_email=<email>` for the username then `atlassian_apiToken=<api_token>`. email address should be the `email address` that was use with atlassian account and the `api_token` can be generated through atlassian website https://id.atlassian.com/manage-profile/security/api-tokens
+
+Information on how to create an API token can also get it through here https://support.atlassian.com/atlassian-account/docs/manage-api-tokens-for-your-atlassian-account/
+
+### Incomming Request Authentication
 
 The app will authenticate incoming request for the proxy routes before sending it to the remote endpoints
 
 As specified the functionality of the app should respond to `GET` request. The server should look for the `authorization` in the request header and that `authorization` header should contain user credential username and password needed for the authentication. the format should be in this way `Authorization: Basic <username>:<password>`
 
-### How user credentials was stored and add or remove user
+### How incomming request credentials is stored
 
 User credentials that will use to validate user is stored in `local_db > users`. Users credential can be added by manually adding a json file into the directory. JSON file contains a property of username and password. The name of the json file can be anything. The user can also be removed by manually deleting its json file. adding and deleting json files for the user takes effect immediately.
 

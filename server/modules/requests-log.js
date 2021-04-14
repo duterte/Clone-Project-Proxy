@@ -3,6 +3,7 @@
 const fs = require('fs-extra');
 const path = require('path');
 const moment = require('moment-timezone');
+const { v4: uuid } = require('uuid');
 const appConfig = require(path.resolve('app.config.json'));
 
 function log(req, res, next) {
@@ -16,14 +17,16 @@ function log(req, res, next) {
   const host = 'host=' + req.hostname;
   const requestpath = `path="${req.originalUrl}"`;
   const pid = 'pid=' + process.pid;
+  const requestId = uuid();
+  const referenceId = `referenceId=` + requestId;
+  req.referenceId = requestId;
+
   let auth = 'auth=false';
   const authentication = req.authentication;
   if (authentication && authentication.userExist && authentication.pwdMatch) {
     auth = `auth=true user=${authentication.username}`;
   }
-  console.log(req.url);
-  console.log(authentication);
-  const data = `${timestamp} ${pid} ${forward} ${auth} ${method} ${protocol} ${host} ${requestpath}`;
+  const data = `${timestamp} ${pid} ${forward} ${auth} ${method} ${protocol} ${host} ${requestpath} ${referenceId}`;
 
   fs.ensureFile(logFilePath)
     .then(() => fs.appendFile(logFilePath, data + '\r\n', 'utf-8'))

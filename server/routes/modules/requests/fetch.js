@@ -1,5 +1,6 @@
 'use strict';
 
+require('dotenv').config();
 const path = require('path');
 const fetch = require('node-fetch');
 const appConfig = require(path.resolve('app.config.json'));
@@ -13,10 +14,14 @@ async function makeFetchRequest(object) {
 
   const domain = selectDNS || 'http://localhost:5000';
   const url = domain + urlPathParam + queryParam;
+  const email = process.env.atlassian_email || 'not_exist@email.com';
+  const apiToken = process.env.atlassian_apiToken || 'wrongApiToken';
+  const atlassianAuth = `${email}:${apiToken}`;
 
   const options = {
     method: 'GET',
     headers: {
+      Authorization: `Basic ${Buffer.from(atlassianAuth)}`,
       Accept: 'application/json',
     },
   };
