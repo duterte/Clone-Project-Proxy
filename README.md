@@ -18,6 +18,8 @@ Credentials use for atlassian authentication should be stored in .env file using
 
 Information on how to create an API token can also get it through here https://support.atlassian.com/atlassian-account/docs/manage-api-tokens-for-your-atlassian-account/
 
+Atlassian auth credentials should be treated in a secure manner not to be share to anyone and so it is place in .env file
+
 ### Incomming Request Authentication
 
 The app will authenticate incoming request for the proxy routes before sending it to the remote endpoints
