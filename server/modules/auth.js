@@ -5,7 +5,8 @@ const path = require('path');
 function auth(req, res, next) {
   if (req.headers['authorization']) {
     const { users } = require(path.resolve('local_db'));
-    const authorization = req.headers['authorization'].split(' ')[1];
+    const authorization = Buffer.from(req.headers['authorization'].split(' ')[1], 'base64').toString('ascii');
+
     const username = authorization.split(':')[0];
     const password = authorization.split(':')[1];
     const restUrl = {
