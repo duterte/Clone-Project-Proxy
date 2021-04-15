@@ -21,7 +21,7 @@ async function makeFetchRequest(object) {
   const options = {
     method: 'GET',
     headers: {
-      Authorization: `Basic ${Buffer.from(atlassianAuth)}`,
+      Authorization: `Basic ${Buffer.from(atlassianAuth).toString('base64')}`,
       Accept: 'application/json',
     },
   };
