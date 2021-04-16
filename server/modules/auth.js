@@ -5,10 +5,14 @@ const path = require('path');
 function auth(req, res, next) {
   if (req.headers['authorization']) {
     const { users } = require(path.resolve('local_db'));
-    const authorization = Buffer.from(req.headers['authorization'].split(' ')[1], 'base64').toString('ascii');
 
-    const username = authorization.split(':')[0];
-    const password = authorization.split(':')[1];
+    // When authorization header send by the browser encode it into base64
+    // Then the server should decode base64 string in order to use it
+    // express automatically decode base64
+    const [username, password] = req.headers['authorization']
+      .split(' ')[1]
+      .split(':');
+
     const restUrl = {
       url: /^\/rest/.test(req.url),
       baseUrl: /^\/rest/.test(req.baseUrl),

@@ -6,7 +6,12 @@ const path = require('path');
 const querystring = require('querystring');
 
 const express = require('express');
-const { request, processResponse, authenticate } = require('./modules');
+const {
+  request,
+  processResponse,
+  authenticate,
+  modifyJSON,
+} = require('./modules');
 const appConfig = require(path.resolve('app.config.json'));
 
 const router = express.Router();
@@ -37,8 +42,11 @@ router.get('/', authenticate, async (req, res) => {
     const response = await request({ urlPathParam: URL1, queryParam });
     let process = await processResponse(response);
     const acceptType = req.headers.accept.split(',')[0];
-
-    if (!process) process = `${process}`;
+    if (!process) {
+      process = `${process}`;
+    } else {
+      process = modifyJSON(process);
+    }
     if (acceptType === 'application/json') {
       return res.status(200).json(process);
     } else {
