@@ -140,7 +140,7 @@ async function processResponse(response) {
         // does not really contain transactions property
         // No transaction is treated as unscessfull
         return evaluationOpportunityValue(response, i);
-      } else if (response2.transactions && !response2.transactions[0].length) {
+      } else if (response2.transactions && !response2.transactions.length) {
         // No transaction
         // because transactions property contain
         // an empty array
